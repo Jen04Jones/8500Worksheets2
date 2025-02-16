@@ -57,7 +57,7 @@ paste("R", "isn't so bad!" )
 
 (@) Can you explain what happened in 2-3 sentences? 
 
-> When I  use pastel()I can add two articles, comments, or textual items. Like I was able to split up R, and the description isn't so bad! To make a string sentence.
+> When I  use pastel()I can add two articles, comments, or textual items. To make a string sentence. I have split my string up into two parts connected by , to create a full sentence.
 
 The last type are **logical** values like `TRUE` and `FALSE`. (Note that these are all caps.)
 
@@ -99,9 +99,9 @@ Logical Operators allow you to combine or change the results of comparisons.
 5 == 10  5 isn't equal to 10 - FALSE
 3 < 4 3 is less than 4 - TRUE
 5 != 10 5 isn't equal to 10 - TRUE
-5 != 5 5 is equal to 5 - TRUE
+5 != 5 5 isn't equal to 5 - FALSE
 3 == 4 | 3  3 is equal to 4 or 3 -TRUE
-3 != 4 & 3 != 5 3 isn't equal to 4 or 5 - TRU
+3 != 4 & 3 != 5 3 isn't equal to 4 or 5 - TRUE
 
 >
 
@@ -154,7 +154,7 @@ x <- 13
 (@) Can you assign a string to a variable?
 
 ```{r}
-x <- "Ice Cream is good"
+x <- "Ice Cream is my favorite!"
 ```
 
 Once we've assigned a variable we can use that variable to run calculations just like we did with raw numbers.
@@ -178,11 +178,14 @@ My.Calculation <- (x + x)*10
 ```{r}
 x <- 3
 y <- 2
+
+x + y == 5
 ```
 
 (@) Can you take `x` and `y` and multiply the result by 5? 
 ```{r}
-(x +y) * 5
+(x + y) * 5
+
 ```
 
 (@) Try creating two variables with names other than `x ` and `y`. Descriptive names tend to be more useful. Can you multiply the contents of your variables? 
@@ -190,15 +193,17 @@ y <- 2
 numberTwo <- 2
 numberSix <- 6
 
-( numberTwo * numberSix)
+(numberTwo * numberSix)
+
 ```
 
 (@) Try creating two variables that store strings. Can you concatenate those two variables together? 
 ```{r}
-first <-"I love my cat, "
-second <-"She is named Lilly"
+first <-"I love my cat,"
+second <-"she is named Lilly."
 
 paste( first, second)
+
 ```
 
 ### Vectors
@@ -231,7 +236,9 @@ And we could then do calculations based on these values:
 ```{r}
 my.numbers * 2
 ```
-(@) Explain in a few sentences, what happened in the code above? my.numbers is actually the vector for 2, 4, 6, 8 multple by 2. When I run my numbers it doubles each of the numbers in vector, so it is == to 4, 8, 12, 16
+(@) Explain in a few sentences, what happened in the code above? 
+
+my.numbers is actually the vector for 2, 4, 6, 8 multple by 2. When I run my numbers it doubles each of the numbers in vector, so it is == to 4, 8, 12, 16
 
 >
 
@@ -239,7 +246,9 @@ Lets try something slightly different.
 ```{r}
 my.numbers[3] * 2
 ```
-(@) Explain in a few sentences, what happened in the code above? This took the third number of my vectors and multipled it by 2. So it is saying 6 times 2 which when ran is 12.
+(@) Explain in a few sentences, what happened in the code above?
+
+ This took the third number of my vectors and multipled it by 2. So it is saying 6 times 2 which when ran is 12.
 
 
 (@) You try, create a list of five items and store it in a descriptive variable. 
@@ -307,13 +316,13 @@ typeof(iris)
 
 We can see that iris is a list. But we want to use the tibble package to turn it into a dataframe. Thats very easy, we can simply run: 
 ```{r}
-as_tibble(iris)
+tibble(iris)
 ```
 
 That is useful. But we can also create our own data frame from vectors. That means we can create the values in each field. For example: 
 
 ```{r}
-tibble(
+tibble (
 x = 1:5, 
 y = 1, 
 z = x * 2 + y
@@ -322,7 +331,7 @@ z = x * 2 + y
 What is going on here? Each line within this function (x,y,z) creates a new column and determines the values in each row. So the first line creates five rows with values sequentially from 1 to 5. The second column contains only the value 1 in all five rows. 
 
 (@) What is going on in row z? Can you explain the logic here?
-Column z is adding the other columns from left to right together, so it is coming up with the total of each row. 
+Column z is adding the other rows from left to right together, so it is coming up with the total of each row. It is basically tabulating the x and y columns.
 >
 
 
@@ -330,6 +339,9 @@ Column z is adding the other columns from left to right together, so it is comin
 
 Lets also install the data package that I've created for our class. This package contains a variety of historical datasets that you can use to complete your assignments this semester. However, this package is not on CRAN. That's okay. We can still install it from GitHub. To do that we'll need to use the `devtools` package. We'll install devtools and then use it to install our class's package which is hosted on GitHub. 
 
+```{r}
+library(devtools)
+```
 
 First, install the `devtools` package.
 
@@ -342,10 +354,34 @@ library(DigitalMethodsData)
 ```
 
 What kind of datasets are available in this package? We can use the help documentation to find out. 
+```{r}
+ ?DigitalMethodsData()
+ ```
 
-Run `help(package="DigitalMethodsData")` in your console to pull up a list of datasets included in this package. 
+Description
 
-For demonstration purposes we'll use the `gayguides` data here. Pull up the help documentation for this dataset. What does the documentation tell you about the scope of this dataset? Bobs Damron's Address Books from 1965 through 1985 in,
+This package provides sample datasets for the use of students in History 8510 at Clemson University. It is similar to the datasets and the histdata package.
+
+References
+References for each dataset included here is included on the documentation page.
+
+Run `help(package="DigitalMethodsDaita")` in your console to pull up a list of datasets included in this package. 
+
+almshouse_admissions -	Philadelphia Almshouse Admissions 1796-1803
+BostonWomenVoters -	1920 Boston Women's Voter Register This data is derived from the Boston Archives and Records Management
+charlestonManumissions -	Manumissions Data, Charleston District, South Carolina, 1776-1800
+DigitalMethodsData - Datasets for Digital Methods II at Clemson University
+gayguides -	Bob Damron's Address Books
+judges-Federal judges in the United States of America
+statepopulations -	Populations of US states and territories, 1790-2010
+undergroundRR-	Underground RR Data The names/data of almost 1,000 freedom seekers who sought refuge with abolitionist William Still in 1850s.
+
+
+For demonstration purposes we'll use the `gayguides` data here. Pull up the help documentation for this dataset. What does the documentation tell you about the scope of this dataset? 
+
+ ?gayguides()
+
+Bobs Damron's Address Books from 1965 through 1985 in,
 One data frame with 14 variables and 60698 obervations.
 
 
@@ -385,7 +421,7 @@ head(gayguides, 10)
 
 (@) Reflect on the previous two prompts. How did you figure these out? 
 
->I googled them. 
+>I googled them, but also looked at other examples
 
 The `str()` function is another very useful function for understanding a dataset. It compactly displays the internal structure of an R object. 
 ```{r}
@@ -404,24 +440,24 @@ gayguides$title[500]
 
 (@) Break this down. Whats going on here? What do each of the elements of this code mean? (gayguides, $, title, and [500]) 
 
-gayguides is your dataset 
+gayguides is the dataset 
 $ - lets you pull up a piece of the data, like a section. 
 title - gives you the names of locations "Beach" or "B.A." in a row. 
 [500] - gives you the 500th entry which is the Rest Stop.
 
->
+>basically it's database$segment [numbered line]
 
 (@) The Year variable contains the year (numeric) of each entry. Can you find the earliest year in this dataset? (Using code, don't cheat and use the documentation!) 1982
 
 ```{r}
-gayguides$Year
+gayguides$Year[1]
 
 ```
 
 
-(@) How about the latest year? 1981
+(@) How about the latest year?  1975
 ```{r}
-gayguides$Year[length]
+gayguides$Year[60691]
 
 
 ```
@@ -429,12 +465,27 @@ gayguides$Year[length]
 
 (@) Add another dataset from `DigitalMethodsData`. How many observations are included in this dataset? Run through some of the examples from above to learn about the dataset.
 ```{r}
-
+?judges()
 ```
 
 (@) What did you learn about the dataset? What can you tell me about it? 
 
->
+>Description
+This dataset contains information about the appointments and careers of all federal judges in United States history since 1789. It includes judges who "judges presidentially appointed during good behavior who have served since 1789 on the U.S. District Courts, the U.S. Courts of Appeals, the Supreme Court of the United States, the former U.S. Circuit Courts, and the federal judiciary's courts of special jurisdiction." This dataset is left purposely messy for History 8510.
+
+Usage
+judges
+Format
+One data frame with 201 variables and 3886 observations.
+
+References
+This data is taken from the Biographical Directory of Federal Judges, 1789-present.
+
+Examples
+Run examples
+
+data("judges")
+head(judges)
 
 
 
