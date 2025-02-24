@@ -489,5 +489,5 @@ head(judges)
 
 
 
-CONGRATS! You've completed your first worksheet for Digital Methods II. That wasn't so bad, right? 
 
+CONGRATS! You've completed your first worksheet for Digital Methods II. That wasn't so bad, right? Not too bad 
