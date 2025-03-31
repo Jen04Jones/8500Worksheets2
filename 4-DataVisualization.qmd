@@ -1,7 +1,7 @@
 ---
 title: 'Worksheet 4: Data Visualization'
-author: ""
-date: ""
+author: "Jen Jones"
+date: "3-27-2025"
 ---
 
 _This is the fourth in a series of worksheets for History 8500 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), render your document to a pdf, and upload it to canvas. Don't forget to commit your changes as you go and push to github when you finish the worksheet._
@@ -25,49 +25,82 @@ Any type of plot in R has 3 necessary layers.
 Lets load all the libraries we'll use in this worksheet: 
 ```{r message=FALSE, warning=FALSE}
 library(gapminder) #this is a dataset
-library(ggplot2) 
+library(ggplot2)
 library(tidyverse)
 library(DigitalMethodsData)
 ```
 To begin, we're going to use one of R's built in datasets. First lets take a look at the data: 
 ```{r}
 data(gapminder)
+head(gapminder)
+library(gapminder)
 ```
 
 (@) Take a look at the data. What can you say about it? 
 
-> 
+> It's set up in columns with a row of titles across the top. I just pulled up the first five. 
+  It has the country, continent, year, life Expectancy, population, gdpPercap.
 
-This data includes variables for life exptenency and per capita GDP. Lets say we want to plot these two variables against each other for all country-years within the dataset. First we have to tell `ggplot()` what our data is. 
+This data includes variables for life exptenency and per capita GDP. Lets say we want to plot these
+ two variables against each other for all country-years within the dataset.
+ First we have to tell `ggplot()` what our data is. 
 ```{r}
 p <- ggplot(data = gapminder)
 ```
 
-What happened here? A new variable, `p` was created but we didn't get a plot yet. That is because we've told `ggplot` what data we're going to use but we haven't mapped anything to a plot yet. We need to tell `ggplot` what variables in the data should be represented by which visual elements in the plot. We also haven't told it what kind of plot we want. 
+
+What happened here? A new variable, `p` was created but we didn't get a plot yet. That is because we've told 
+`ggplot` what data we're going to use but we haven't mapped anything to a plot yet. We need to tell `ggplot`
+ what variables in the data should be represented by which visual elements in the plot. We also haven't 
+ told it what kind of plot we want. 
 
 Mappings in `ggplot` are defined using the `aes()` function like this: 
 ```{r}
 p <- ggplot(data = gapminder, mapping = aes(x = gdpPercap, y=lifeExp))
 ```
 
-In this code we gave `ggplot()` two arguments instead of one - data and mapping. This tells ggplot that we want the data about GDP to be mapped to the x-axis and data about life expectancy on the y-axis. The `mapping = aes()` argument is **linking variables in our data to things you will see on the plot**.
+In this code we gave `ggplot()` two arguments instead of one - data and mapping. This tells ggplot that we want the data about 
+GDP to be mapped to the x-axis and data about life expectancy on the y-axis. The `mapping = aes()` argument 
+is **linking variables in our data to things you will see on the plot**.
 
-There are numerous types of aesthetic mappings. x and y values are the most common and obvious but we could also define things like color, shape, size, and line type (solid vs dashed etc.)
+There are numerous types of aesthetic mappings. x and y values are the most common and obvious but we could also define things like color,
+ shape, size, and line type (solid vs dashed etc.) 
 
-We can view the plot that we've created by calling the variable that we stored our plot in, `p`. What we get is an empty plot. You'll notice that ggplot has created both the x and y-axis for us but there are not points on our plot. That is because we need to add a layer to the plot that includes the data. `geom_point()` helps us do that. It takes the x and y values and plots them in a scatterplot. 
+We can view the plot that we've created by calling the variable that we stored our plot in, `p`. What we get is an empty plot.
+ You'll notice that ggplot has created both the x and y-axis for us but there are not points on our plot. That is because we need 
+ to add a layer to the plot that includes the data. `geom_point()` helps us do that. It takes the x and y values and plots them
+ in a scatterplot. 
 
 ```{r}
+# I accidently deleted this bit of code, you put in, as a model. I think. But it was similar to this. just different varables.
+p <- ggplot(data = gapminder, mapping = aes(x = lifeExp, y=pop))
 p + geom_point()
+#p + geom_point() +
+  labs(
+    title = "Graph of Life Expectancy vs Population",) #I can't remember what the varaibles and title were here. 
 ```
+To summarize what we did above, there were 3 steps we went through. First, tell `ggplot()` what our data is. Second, add 
+`mapping = aes()` to map our variables to the plot. And, third, choose a geom. In this case our geom was `geom_point()` 
+which created the points/data layer on our plot. A fourth step could have included adding a scale, legend, title or some 
+other element to the graph. These are typically referred to as labs. 
 
-To summarize what we did above, there were 3 steps we went through. First, tell `ggplot()` what our data is. Second, add `mapping = aes()` to map our variables to the plot. And, third, choose a geom. In this case our geom was `geom_point()` which created the points/data layer on our plot. A fourth step could have included adding a scale, legend, title or some other element to the graph. These are typically referred to as labs. 
+(@) Modify the above plot so that the variables it draws on are life expectancy and population. Then, use a comment to annotate
+ the code and mark each of the 3 parts described above.
 
-(@) Modify the above plot so that the variables it draws on are life expectancy and population. Then, use a comment to annotate the code and mark each of the 3 parts described above.
 ```{r}
+     #1 ggplot data                     #2 mapping with aes
+p <- ggplot(data = gapminder, mapping = aes(x = lifeExp, y=pop))
+p + geom_point()  #3 choose geom
+#p + geom_point() +
+  labs(
+    title = "Graph of Life Expectancy vs Population",)
+
 
 ```
 
-We can make this plot even more complex. Adding another value, color, to `aes()` we can change the color of each dot to correspond to a year. We also might want to rename the x and y-axis so that the labels have a more useful description of the variable. We can do so using the labs function. 
+We can make this plot even more complex. Adding another value, color, to `aes()` we can change the color of each dot to
+ correspond to a year. We also might want to rename the x and y-axis so that the labels have a more useful description 
+ of the variable. We can do so using the labs function. 
 
 ```{r}
 ggplot(data = gapminder, mapping = aes(x = gdpPercap, y=lifeExp, color=year)) + geom_point() + labs(x="GDP Per Capita", y="Life Expectency in Years", title="Life Expectency and Per Capita GDP by Year") 
@@ -75,68 +108,226 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y=lifeExp, color=year)) + 
 
 (@) Using the same plot above, can you edit the code to add a trend line? (Hint: You'll need to add another geom)
 ```{r}
+head(gapminder)
+
+ggplot(data = gapminder, mapping =aes(x =gdpPercap, y=lifeExp, color=year)) + 
+      geom_point() + 
+        geom_smooth(method = "lm", se = TRUE)  # trendline
+          labs(
+                x= "GDP Per Capita" , 
+                y="Life Expectency in Years", 
+                title="Life Expectency and Per Capita GDP by Year")
+
+
 
 ```
 
 
-(@) The file below contains data about the population of cities in 1930 and their recreation expenditures. Can you create a scatter plot from this data? 
+(@) The file below contains data about the population of cities in 1930 and their recreation expenditures. Can you create a scatter plot
+ from this data? 
 ```{r}
 rec <- read.csv(file = "https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/Recreation-Expenditures.csv")
+
+data_url <- "https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/Recreation-Expenditures.csv"
+  recreation <- read.csv(data_url)
+     head(recreation)
+     str(recreation)
+
+  ggplot(data = recreation, mapping = aes(x = year, y = total_expenditures)) +
+     geom_point() +
+      labs(
+          title = "Recreation Expenditures",
+          x = "state",
+          y = "total_expenditures"
+  )
 ```
 
 The `geom_point()` function allows us to create scatterplots but its not the only geom within `ggplot2()`.
 
 ### Histogram 
 
-A histogram is a graph used to represent the frequency distribution of a few data points of one variable. Histograms often classify data into various “bins” or “range groups” and count how many data points belong to each of those bins.
+A histogram is a graph used to represent the frequency distribution of a few data points of one variable. Histograms often classify
+ data into various “bins” or “range groups” and count how many data points belong to each of those bins.
 
 ```{r}
 recreational.data <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/Recreation-Expenditures.csv")
 
 ggplot(recreational.data, aes(x = population)) +
-  geom_histogram()
+  geom_histogram() #says 30 bins
 ```
 
 (@) Use the Boston Women's voters dataset to create a histogram of the age of voters. 
 ```{r}
+library(DigitalMethodsData)
+  data(BostonWomenVoters) #Checking out the dataset
+  head(BostonWomenVoters)
+  str(BostonWomenVoters)
+  colnames(BostonWomenVoters)
+
+ggplot(BostonWomenVoters, aes(x=Age)) +
+  geom_histogram()
 
 ```
 
-(@) By default, `geom_histogram()` is choosing the number of bins. Can you change the number of bins or the bin width? (Hint: How might you look up the options for this function?)
+(@) By default, `geom_histogram()` is choosing the number of bins. Can you change the number of bins or the bin width? (Hint: How 
+might you look up the options for this function? 
+
+Yes, you can change the number of bins or bin width. You need to set them up as a varable.
+
+If you want to know about the geom_histogram you can run ?geom_histogram. or use the geom_histogram
+or https://ggplot2.tidyverse.org/reference/geom_histogram.html or you can Google or use Copilot. 
+
+
 ```{r}
+# Example: Just a basic idea
+
+ ggplot(data, aes(x = variable)) +
+    geom_histogram(bins = 25)
 
 ```
 
 (@) Explain, what does changing the number of bins do? 
 
-> 
+With more bins, the histogram divides the data into smaller intervals, showing more detail. However, too many bins can create a noisy or cluttered graph that makes it harder to see overarching patterns.
+
+Fewer bins group the data into larger intervals, offering a more generalized and smoothed-out view. While this simplifies the graph, it may obscure finer details or variations in the data.
 
 ### Barplots 
 
-A barplot (or barchart) is one of the most common types of graphic. Whereas a histogram shows the number of entries in each "bin" - a bar chart shows the relationship between a numeric and a categorical variable. Each entity in the categorical variable is represented as a bar. The size of the bar represents its numeric value. 
+A barplot (or barchart) is one of the most common types of graphic. Whereas a histogram shows the number of entries in each "bin" - a bar chart 
+shows the relationship between a numeric and a categorical variable. Each entity in the categorical variable is represented as a bar. 
+The size of the bar represents its numeric value. 
 
 ```{r}
+library(dplyr)
+library(ggplot2)
+
+sc.rec <- read.csv(file = "https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/Recreation-Expenditures.csv")
+
+data_url <- "https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/Recreation-Expenditures.csv"
+  recreation <- read.csv(data_url)
+
 sc.rec <- recreational.data %>% group_by(state) %>% summarize(state.expenditures = sum(total_expenditures))
 ggplot(sc.rec, aes(x = state, y = state.expenditures )) +
-  geom_col()
+geom_col()
+
+
+
 ```
 
 (@) Using the `gayguides` data, create a bar chart that shows the number of locations in 1980 in South Carolina, Georgia, and North Carolina. 
 ```{r}
+   library(DigitalMethodsData)
+   data(gayguides) #I went a little crazy with the libraries, just in case.
+   library(dplyr)
+   library(ggplot2)
 
+   colnames(gayguides)
+   str(gayguides$Year)
+   str(gayguides$state)
+
+state_data <- gayguides %>%
+  filter(Year == 1980 & state %in% c("SC", "GA", "NC")) %>%
+    group_by(state) %>%
+     summarize(num_locations = n())
+
+ggplot(state_data, aes(x = state, y = num_locations, fill = state)) +
+   geom_col() +
+     labs(
+        title = "Number of Places in 1980",
+         x = "State",
+         y = "Number of Locations"
+  ) 
+  
 ```
 
 (@) Using the `gayguides` data, plot the number of religious institutions in each state.
 ```{r}
+library(DigitalMethodsData)
+library(dplyr)
+library(ggplot2)
+
+#I think (R) stands for religious institutions from amenityfeatures
+religion_locations <- gayguides %>%
+  filter(grepl("\\(R\\)", amenityfeatures, ignore.case = TRUE) & 
+         state %in% c("SC", "GA", "NC")) %>%
+  group_by(state) %>%
+  summarize(religion_locations = n())
+
+#Check the count
+print(religion_locations)
+
+# Create the bar graph
+ggplot(religion_locations, aes(x = state, y = religion_locations, fill = state)) +
+  geom_col() +
+  labs(
+    title = "Number of Religious Places",
+    x = "State",
+    y = "Number of Religious Institutions"
+
+    
+  ) 
+
 
 ```
 
-(@) Formulate a question based on a dataset of your choice. That question should be something that would be appropriately answered by a bar chart. What is the question you want to explore?
+(@) Formulate a question based on a dataset of your choice. That question should be something that would be appropriately answered by a bar chart. What is the question you want to explore? 
+
+I'm interested in women suffrage what I'd like to question is the occupation and age of the women fighting to vote.
+I want to know that status of most of the women involved, were they housewives, teachers, nurses, semstress? 
+I think most people don't realize that these women came from many backgrounds, and status. 
+What was the youngest voters?
+What were the top 3 occupations? 
+
+What I found interesting is basically the top occupation for women seeking the right to vote were "housewives", in some form of title,
+from "at home", "capitaalized Housewife" to "housekeeper", which made me curious to what their husband's occupations were. But this
+graph specifically is looking at occupation and age. Were these women well-off, what were their backgrounds? I had orginally looked
+at the top 3 occupations, and of course this only showed a woman that works at a house or home, so more domestic. Curriously I had to
+do a new query for the top 6 occupations, the fifth highest was a clerk, the sixth a stenagrapher. The age of the women showed that
+there were more women around 30, and mostly all were housewives. It is very interesting that the sixth highest recorded
+occupation was stenagrapher and these women were in their twenties . These women would have had a good knowledge of 
+the law, and the process. Which could have aided The Boston women in their protests.
+
+
 
 <
 
 (@) Now write the code to answer that question and use comments (`#`) to explain your thinking as you go.
 ```{r}
+
+library(dplyr)
+library(ggplot2)
+library(DigitalMethodsData)
+
+#Turns out the top 3 occupations are recorded as housewives , I'd like to go further with
+#so I made it top 6 occupations. My findings are above.
+
+
+# My thinking is knowing the occupations of most women would show status and background
+ top_occupations <- BostonWomenVoters %>%
+   group_by(Occupation) %>%
+     summarize(total_count = n()) %>%
+      arrange(desc(total_count)) %>%
+        slice(1:6) 
+
+# Filter for top 6 Occupations
+ top_6_data <- BostonWomenVoters %>%
+   filter(Occupation %in% top_occupations$Occupation) %>%
+     mutate(Age = as.numeric(as.character(Age)))
+
+#I really think it is important to look at the age group as well, these women were mostly middle aged.
+#which makes them more established in their community.
+ggplot(top_6_data, aes(x = Age, fill = Occupation)) +
+  geom_bar() +  # Automatically counts rows by Age
+  labs(
+    title = "Age of Women Voters in Top 6 Occupations",
+     x = "Age",
+     y = "Number of Women Voters",
+     fill = "Occupation"
+
+     
+  )
+
 
 ```
 
@@ -154,10 +345,67 @@ ggplot(gg.byyear, aes(x = Year, y = count)) +
 (@) Create a line chart that shows the number of religious institutions in the gay guides data over time.
 ```{r}
 
+library(dplyr)
+library(ggplot2)
+library(DigitalMethodsData)
+data(gayguides)
+
+# Filter out 'R' religious institutions
+religious_data <- gayguides %>%
+  filter(grepl("\\(R\\)", amenityfeatures, ignore.case = TRUE)) 
+
+# Group religious insitutions by year'
+gg.byReligious <- religious_data %>%
+  group_by(Year) %>%
+  summarize(count = n())
+
+# line chart
+library(ggplot2)
+ggplot(gg.byReligious, aes(x = Year, y = count)) +
+  geom_line(color = "blue", size = 1) +
+  labs(
+    title = "Number of Religious Institutions Over Time",
+    x = "Year",
+    y = "Number of Religious Institutions"
+  ) 
+  
+
+
 ```
 
 (@) In the gayguides data, danger or risk is indicated in several different ways. Sometimes it through the use of an amenity categorization of (HOT) or (AYOR) which meant that these locations were frequented by police and should be used at your own risk. Other times, locations were listed as "inquire locally" in either the description or address field. There are many reasons a location would have requested to have been listed this way. Many times, it was due to harassment and the location deemed it too dangerous to publicly list its location. Can you create a subset of the gay guides data about risk and then use it to create a chart about the usage of these indicators over time? 
 ```{r}
+# Libraries
+library(DigitalMethodsData)
+library(dplyr)
+library(ggplot2)
+data(gayguides)
+
+#Define high risk
+gayguides$high_risk <- FALSE
+
+#Combine HOT and AYOR
+Rows with (HOT) or (AYOR) in 'amenityfeatures' as TRUE
+gayguides$high_risk[grepl("(HOT|AYOR)", gayguides$amenityfeatures, ignore.case = TRUE)] <- TRUE
+
+# Added "inquire locally" in 'description' or 'address' as TRUE
+gayguides$high_risk[grepl("inquire locally", paste(gayguides$description, gayguides$address, sep = " "), ignore.case = TRUE)] <- TRUE
+
+#Filter for high-risk locations and group by year
+high_risk_data <- gayguides %>%
+    filter(high_risk) %>%
+      group_by(Year) %>%
+        summarize(count = n())
+
+#  Create line chart
+ggplot(high_risk_data, aes(x = Year, y = count)) +
+    geom_line(color = "red", size = 1) +
+      labs(
+          title = "Usage of High-Risk Indicators Over Time",
+          x = "Year",
+          y = "Number of High-Risk Locations"
+  ) 
+
 
 ```
 
@@ -174,45 +422,278 @@ ggplot(gg.byyear, aes(x = Year, y = count)) +
 
 (@) Using the state recreation data, can you create a chart that outlines the total expenditures in South Carolina by city?
 ```{r}
+#Libraries
+library(dplyr)
+library(ggplot2)
+
+# recreation data
+data_url <- "https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/Recreation-Expenditures.csv"
+recreation <- read.csv(data_url)
+
+# Filter for South Carolina and group by city
+sc_data <- recreation %>%
+    filter(state == "SC") %>%
+       group_by(city) %>%
+         summarize(total_expenditures = sum(total_expenditures, na.rm = TRUE))
+
+# Make a pretty bar chart
+ggplot(sc_data, aes(x = reorder(city, total_expenditures), y = total_expenditures)) +
+     geom_bar(stat = "identity", fill = "skyblue") + #A happy sky color!
+        coord_flip() +
+         labs(
+             title = "Total Recreation Expenditures in South Carolina by City",
+                 x = "City",
+                 y = "Total Expenditures"
+  ) 
+
 
 ```
 
 (@) Using the gayguides data can you select 5 types of locations and chart the number of each type between 1965 and 1980? 
 ```{r}
 
+# Libraries
+library(dplyr)
+library(ggplot2)
+library(DigitalMethodsData)
+
+# Load the gayguides dataset
+data(gayguides)
+
+# Filter places by year and type
+selected_data <- gayguides %>%
+  filter(Year >= 1965 & Year <= 1980) %>%
+    filter(type %in% c("Bars/Clubs", "Cruising Areas", "Hotels", "Restaurants", "Bathhouses")) %>%
+      group_by(place, Year) %>%
+        summarize(count = n())
+
+
+#print(head(selected_data))  # Check if data is correctly filtered and summarized
+
+#Create bar chart
+ggplot(selected_data, aes(x = Year, y = count, fill = type)) +
+  geom_bar(stat = "identity") +
+    labs(
+      title = "Places to Go Between 1965-1980",
+      x = "Year",
+      y = "Count",
+      fill = "Places"
+  ) 
+
+
 ```
 
 (@) Using this recreation dataset from last week, can you find the average number of volunteer and paid workers over time? 
 ```{r}
+#Libraries
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+# Load the dataset
 rec.workers <- read.csv("https://raw.githubusercontent.com/regan008/DigitalMethodsData/main/raw/RecreationData-Wide.csv")
+
+# Data from wide to long format  
+rec_long <- rec.workers %>%
+  pivot_longer(
+    cols = starts_with("X"), # columns with years start with X
+   names_to = "Year",       # Create a new column for years
+     names_prefix = "X",      # Remove the 'X' prefix from year names
+      values_to = "Workers"    # Create a column for worker numbers
+  )
+
+# Average
+averages <- rec_long %>%
+  group_by(Year, type_of_worker) %>%
+  summarize(
+    avg_workers = mean(Workers, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Filter out NaN values
+averages <- averages %>%
+  filter(!is.nan(avg_workers))
+
+# Create a line graph
+ggplot(averages, aes(x = as.numeric(Year), y = avg_workers, color = type_of_worker)) +
+  geom_line(linewidth = 1.2) +  # Use linewidth instead of size
+    labs(
+       title = "Average Number of Volunteers and Paid Workers Over Time",
+       x = "Year",
+       y = "Average Number of Workers",
+       color = "Worker Type"
+  ) 
 
 
 ```
 
 ### Practice
-In the slots below use the datasets for class (or a dataset of your choice) to create a plot. The plot you create in each of these three examples should try to make some kind of historical observation. After you finish creating the plot, write a short paragraph that explains what kind of observation you were trying to make and what your plot demonstrates. 
+In the slots below use the datasets for class (or a dataset of your choice) to create a plot. The plot you create in each of these three examples
+ should try to make some kind of historical observation. After you finish creating the plot, write a short paragraph that explains what kind of
+  observation you were trying to make and what your plot demonstrates. 
 
 (@) Plot 1
 ```{r}
 
+# Libraries
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(DigitalMethodsData)
+
+  data(BostonWomenVoters) 
+
+
+  naturalization_data <- BostonWomenVoters %>%
+     select(Date.of.Naturalization, Husband.Date.of.Naturalization) %>%
+  
+  #Dates and husband and wife naturalization
+  mutate(
+    Women = as.Date(Date.of.Naturalization, format = "%Y-%m-%d"),
+      Husband = as.Date(Husband.Date.of.Naturalization, format = "%Y-%m-%d")
+  ) %>%
+  #  Date range: 1825 to 1920  AI (March 30, 2025) Coplit, help with creating date range.
+  filter(
+    Women >= as.Date("1825-01-01") & Women <= as.Date("1920-12-31") |
+      Husband >= as.Date("1825-01-01") & Husband <= as.Date("1920-12-31")
+  ) %>%
+ 
+  pivot_longer(
+    cols = c(Women, Husband), 
+      names_to = "Category", 
+        values_to = "Year"
+  ) %>%
+  # Remove rows with missing dates
+     filter(!is.na(Year)) %>%
+       mutate(Year = as.numeric(format(Year, "%Y"))) %>%
+  # Group by (Women/Husband) and year
+      group_by(Category, Year) %>%
+        summarize(Count = n(), .groups = "drop")
+
+# Using dodge  AI (March 30, 2025)Copliot, help with dodge for bars
+ggplot(naturalization_data, aes(x = Year, y = Count, fill = Category)) +
+  geom_bar(stat = "identity", position = "dodge") +
+    labs(
+      title = "Comparison of Naturalization Dates: Women and Husbands (1825-1920)",
+      x = "Year",
+      y = "Count",
+      fill = "Category"
+  ) 
+
+
 ```
 
 (@) Plot 1 explanation: 
->
+>Naturalization was an issue in the 19th century, often women did not go through the process to become citizens. But they rather marrieed
+men that were Naturalized instead. Because women were not allowed to own property of vote before the 19th century, they were not
+as motivated to Naturalization" for themselves, and therefore were not seen ass a citizen. I want to look at the Naturalization" of
+the women in the database and the Naturalization" of their husband. I find it curious that these women may not have been citizen. 
+This will show if the Boston women from our dataset were citizens on their own, or were citizens only through marriage. 
+
+What I found with my bar graph is that while husbands were naturalized across the year range, very few women were naturalized
+or actually American citizens before the 19th Amendment, which shows just how disconnected women were to their own
+citizienship and agency. I used the date 1825 to 1920 because it was central to the time period before the 19th ammendement 
+was made law. 
 
 (@) Plot 2
 ```{r}
+# Libraries
+library(dplyr)
+library(ggplot2)
+library(tidyr)
 
-```
+#Needed to load statepopulations differently  AI (March 31, 2025) Copilot, help with loading data
+data(statepopulations, package = "DigitalMethodsData")
+
+statepopulations %>%
+  filter(STATE == "South Carolina") %>%   # Filter for South Carolina
+    pivot_longer(
+        cols = starts_with("X"),              # Convert year columns into rows
+          names_to = "Year",
+            values_to = "Population"
+  ) %>%
+  mutate(
+    Year = as.numeric(gsub("X", "", Year))  # Cleaning years, removing X
+  ) %>%
+    filter(Year >= 1860 & Year <= 1920) %>%   # Keep years 1860 to 1920
+      filter(!is.na(Population)) %>%           # Remove NA population
+
+  ggplot(aes(x = Year, y = Population)) +  # Plot data
+    geom_line(color = "blue", linewidth = 1.2) +  # Create the line graph
+      geom_point(color = "red", size = 3) +          # Add points for clarity
+        labs(
+            title = "Population Growth in South Carolina (1860–1920)",
+            x = "Year",
+            y = "Population"
+  ) 
+  
+    ```
+
 
 (@) Plot 2 explanation: 
+
+In this plot I wanted to show the progressive growth of South Carolina after the Civil War. I might want to even look after 1877 eventuallly
+to see how Reconstruction effected census but this is a start. What I was looking for was the population right after the Civil War and see how dismel the
+actual population was. After the Civil War South Caraolina was iin Dire shape for many reasons. I wanted to see just how Dire and the
+progression every 10 years till around the Great Depression and the slowing of the Textile Industry after World War I. This clearly
+shows a steady rise. There are lots of reasons for this rise, and I would like to study these, but this is a great foundation to
+start with. It answers the question of how South Carolina slowly grew back, even after the burning of Sherman, the many who died
+inn the war, and mass migration, with possibily the move from agriculture being the main occupation of most South Carolina, how it grew with the beggining
+of the growth of industry being a factor.
 >
 
 (@) Plot 3. For this one, try a different kind of plot. [Check out a useful gallery here.](https://github.com/regan008/DigitalMethodsData/blob/main/raw/RecreationData-Wide.csv)
-(For this week, avoid choosing a map. We'll talk more about maps and geographic data over the next two weeks.)
+For this week, avoid choosing a map. 
 ```{r}
+> # Libraries
+> library(dplyr)
+> library(ggplot2)
+> library(tidyr)
+>
 
+# URL
+data_url <- "https://github.com/regan008/DigitalMethodsData/blob/main/raw/RecreationData-Wide.csv"
+   recreation <- read.csv(data_url), stringsAsFactors = FALSE)
+> 
+> 
+> data_long <- data %>%
++   pivot_longer(cols = starts_with("X"), names_to = "Year", values_to = "Count") %>%
++     mutate(
++       Year = as.numeric(gsub("X", "", Year)),  # Convert Year to numeric
++          type_of_worker = gsub("men", "male", type_of_worker)  # Replace "men" with "male"
++   ) %>%
++              filter(!is.na(Count))  # Remove rows with NA values
+> 
+> 
+> # city and type of worker
+> city_plot <- ggplot(data_long, aes(x = Year, y = Count, color = type_of_worker, group = interaction(city, type_of_worker))) +
++   geom_line(size = 1.2) +  # Line chart
++   labs(
++     title = "Workforce Trends by City (1930–1945)",
++     x = "Year",
++     y = "Count",
++     color = "Type of Worker"
++   ) 
++   theme_minimal() +
++   facet_wrap(~ city)  # Facet by city
+> 
+> # Step 4: Create the Graph
+>        city_plot  
 ```
 
 (@) Plot 3 explanation: 
->
+
+I wanted to compare the volunteer male and females to the paid of male and females to see if more men were paid for their work with the Rec service, and if more women vollunteered. I thought
+it would show the involvement of women in Parks so that I could begin to answer the question if women were more giving and even not paid for the amount of work they did. I think
+it falls into the fact that women are often under paid. I'd like to know if that is the issue too before 1945. World War II would effect it, but just a first look at how
+things handled even during war. 
+
+
+
+
+
+
+
+
+
+
