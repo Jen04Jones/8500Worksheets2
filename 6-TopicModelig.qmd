@@ -577,27 +577,20 @@ The above are my top 5 topics : it does print out a topic model but d idn't know
 
 The 1890's were an era of change, and growth for the United States. 
 
-You've pulled together a fascinating narrative here, Jennifer, weaving your topic modeling insights with historical milestones from the 1890s.
- The data really highlights the era's dynamic shifts in health, sports, and exercise culture, alongside broader societal and technological changes.
-
-Your topic modeling results suggest strong connections between physical activities like gymnastics and exercise, which were likely influenced by
- key historical events—like the 1896 Olympic Games—and emerging social norms regarding fitness. The repeated presence of "gymnastics" and "exercise" 
- across topics underscores their growing significance during this transformative period. It's striking how sports like basketball, professional football,
-  and the Boston Marathon also gained traction, shaping the health and wellness landscape.
-
-Your point about immigration through Ellis Island and the World's Fair in Chicago provides valuable context for understanding how diverse perspectives 
-on health and wellness converged in the United States. Similarly, the impact of the 1893 depression offers a nuanced view, juxtaposing physical fitness 
-advancements with economic challenges.
-
-The mention of military training in your topic model aligns well with historical developments, including the Spanish-American War and its aftermath.
- This speaks to how physical fitness and military readiness often intersected during this time.
-
-The dataset you've explored seems to be a rich source for examining how health, fitness, and sports evolved during this decade. Do you plan to dive 
-deeper into the connections between exercise and societal shifts, or focus on specific sports like gymnastics? I'd be happy to brainstorm ideas or help
- refine your analysis further!
 
 
-
+During the 1890s a lot was going on, especially in immigration in 1892 Ellis Island for instance held 400,000 immigrants came through, it was 
+also with the worlds fair and the white city of Chicago was opened. There were 50 countries and 26 colonies that were involved in the event. 
+The difference in the health could have come from different cultures, and ideas coming together. The 1890s would bring about the first football
+game, the development of basketball, the first golf open, with a $150.00 prize.  The two most important events that occured in 1890s was
+the first Olympics in Greece, and the first Boston Marathan with only 15 runners. But fundamentlly from my topic modeling gave some very
+good information in one huge aspect of health, wellness and sports, especially using gymnastics throughout the top 5 topic models. This made
+me wonder why this was true, why not marathon? or football? But gymnastics became popular in the 1890s, especially with it's connection with
+the Olympics. There was also importance put on excercise and one military. I can see these being closely related to the end of the Spainish
+America war, and military training. This would be settled 1898, which is almost 1900, and at the end in this very important time for the world
+of sports, and the world in general. One thing for background to point out is this was a time many in America were struggling because of the
+depression of 1893, which left many without jobs or prospects, but it is interesting even with this hardship there is a focus on sports, and
+excersizee. 
 
 
 
