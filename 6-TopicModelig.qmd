@@ -1,7 +1,7 @@
 ---
 title: 'Worksheet 6: Topic Modeling'
-author: ''
-date: ''
+author: 'Jen Jones'
+date: '4/8/2025'
 ---
 
 _This is the sixth in a series of worksheets for History 8500 at Clemson University. The goal of these worksheets is simple: practice, practice, practice. The worksheet introduces concepts and techniques and includes prompts for you to practice in this interactive document. When you are finished, you should change the author name (above), render your document to a pdf, and upload it to canvas. Don't forget to commit your changes as you go and push to github when you finish the worksheet._
@@ -17,15 +17,38 @@ Latent Dirichlet allocation (LDA) is the most popular algorithm or method for to
 To prepare a corpus for topic modeling, we'll do many of the same types of operations that we used last week to prepare a corpus for analysis. First we'll pre-process the data and then we'll create a document term matrix from our corpus using the `tm` (text mining) package. 
 
 ```{r}
+#Added these in because I wasn't able to use tm and topicmodels libraries
+#Added packages and libraries only in top of page. 
+#Packages
+install.packages("tm")
+install.packages("topicmodels")
+install.packages("dplyr")  
+install.packages("wordcloud") 
+install.packages("RColorBrewer") 
+install.packages("library(tidyverse") 
+install.packages("stringdist")
+install.packages("LDAvis")
+
+
+
+
+#Libraries
 library(tidytext)
 library(tidyverse)
 library(readtext)
 library(tm)
 library(topicmodels)
+library(wordcloud)
+library(RColorBrewer)
+library(stringdist)
+library(LDAvis)
+
+
 
 ```
 
 ```{r}
+
 download.file("https://github.com/regan008/8510-TextAnalysisData/blob/main/TheAmericanCity.zip?raw=true", "AmCity.zip")
 unzip("AmCity.zip")
 ```
@@ -50,7 +73,8 @@ tidy_ac <- tidy_ac %>% filter(!grepl('[0-9]', word))
 ```
 The above code borrows from what we did last week. It pulls in the texts from the _The American City_ corpus, joins them together into a single data frame, and then turns then uses `unnest_tokens()` to tokenize the text and, finally, removes stop words. 
 
-For topic modeling, we need a Document Term Matrix, or a DTM. Topic Modeling has the documents running down one side and the terms across the top. `Tidytext` provides a function for converting to and from DTMs. First, we need to create a document that has the doc_id, the word and the count of the number of times that word occurs. We can do that using `count()`.
+For topic modeling, we need a Document Term Matrix, or a DTM. Topic Modeling has the documents running down one side and the terms across the top. `Tidytext` provides a function for converting to and 
+from DTMs. First, we need to create a document that has the doc_id, the word and the count of the number of times that word occurs. We can do that using `count()`.
 
 ```{r}
 tidy_ac_words <- tidy_ac %>% count(filename, word)
@@ -68,9 +92,13 @@ If you run `class(mb.dtm)` in your console you will notice that it now has a cla
 
 Now that we have a dtm, we can create a topic model. For this, we'll use the topic models package and the `LDA()` function. Take a minute and read the documentation for `LDA()`.
 
-There are two important options when running `LDA()`. The first is k which is the number of topics you want the model to generate. What number topics you generate is a decision that often takes some experimentation and depends on the size of your corpus. The American City corpus isn't that bigbut still has over 209k words. In this instance, because the corpus is so small we're going to start with a small number of topics. Going above 5 causes errors with this particular corpus. Later, when you work with a different corpus you should experiment with changing the number of topics from 10 to 20 to 30 to 50 to see how it changes your model. 
+There are two important options when running `LDA()`. The first is k which is the number of topics you want the model to generate. What number topics you generate is a decision 
+that often takes some experimentation and depends on the size of your corpus. The American City corpus isn't that bigbut still has over 209k words. In this instance, because the 
+corpus is so small we're going to start with a small number of topics. Going above 5 causes errors with this particular corpus. Later, when you work with a different corpus you s
+hould experiment with changing the number of topics from 10 to 20 to 30 to 50 to see how it changes your model. 
 
-The second important option when running `LDA()` is the seed option. You don't worry too much about what setting the seed does, but put simply - it ensures the output of the model is predictable and reproducible. Using the seed ensures that if you come back to your code later or someone else tries to run it, the model will return exactly the same results. 
+The second important option when running `LDA()` is the seed option. You don't worry too much about what setting the seed does, but put simply - it ensures the output of the model
+ is predictable and reproducible. Using the seed ensures that if you come back to your code later or someone else tries to run it, the model will return exactly the same results. 
 
 Lets now train our model. This will take a few minutes: 
 ```{r}
@@ -96,13 +124,26 @@ ac.top.terms <- ac.topics %>%
 
 ac.top.terms %>%
   mutate(term = reorder_within(term, beta, topic)) %>%
-  ggplot(aes(beta, term, fill = factor(topic))) +
-  geom_col(show.legend = FALSE) +
-  facet_wrap(~ topic, scales = "free") +
-  scale_y_reordered()
+    ggplot(aes(beta, term, fill = factor(topic))) +
+     geom_col(show.legend = FALSE) +
+      facet_wrap(~ topic, scales = "free") +
+       scale_y_reordered()
 ```
 (@) Can you adjust the code above to show the top 10 words from just one topic?
 ```{r}
+
+ac.top.terms <- ac.topics %>%
+  filter(topic == 1) %>%      # Replace '1' with your topic
+   arrange(desc(beta)) %>% 
+    slice(1:10)            #Select the top 10 words
+
+# Plot the top 10 words
+ac.top.terms %>%
+  mutate(term = reorder(term, beta)) %>%   # Reorder terms
+    ggplot(aes(beta, term, fill = factor(topic))) +
+     geom_col(show.legend = FALSE) +         # Create a bar plot
+       scale_y_reordered() +                   # Adjust y-axis for reordered terms
+         labs(title = "Top 10 Words for Topic 1", x = "Beta", y = "Term")
 
 ```
 
@@ -121,7 +162,8 @@ Now we can see what words are most common in each topic. But the document-topic 
 ac.documents <- tidy(ac.lda, matrix = "gamma")
 head(ac.documents)
 ```
-For each document, the model gives us an estimated proportion of what words in the document are from a topic. So for the April 1915 issue it estimates that about 23% of the words are from topic 1. The gamma number represents the posterior topic distribution for each document. 
+For each document, the model gives us an estimated proportion of what words in the document are from a topic. So for the April 1915 issue it estimates 
+that about 23% of the words are from topic 1. The gamma number represents the posterior topic distribution for each document. 
 
 This is easier to see if we filter to see the breakdown for just one document. 
 ```{r}
@@ -130,12 +172,14 @@ ac.documents %>%  filter(document == "1916_May.txt") %>% arrange(desc(gamma))
 
 This gamma value is really useful and we can use it to see which topics appear in which documents the most. This is frequently referred to as looking at topics over time. 
 
-We can do that using the ac.documents dataframe that we just created but it needs to be joined with the metadata. Again, this is why it is important to have a filename within the metadata spreadsheet. To join these two together we can do a full_join because we want to keep all of the columns.
+We can do that using the ac.documents dataframe that we just created but it needs to be joined with the metadata. Again, this is why it is important to have a filename within 
+the metadata spreadsheet. To join these two together we can do a full_join because we want to keep all of the columns.
 ```{r}
 topics.by.year <- full_join(ac.documents, metadata, by = join_by(document == filename))
 ```
 
-Now what we have is a document that includes the proportion of each topic in each document. Because this is a dataset about a periodical, we have values in our metadata that will make it easy to plot the distrubtion of a topic over time -- in this case for each edition of the journal.
+Now what we have is a document that includes the proportion of each topic in each document. Because this is a dataset about a periodical, we have values in our metadata that will 
+make it easy to plot the distrubtion of a topic over time -- in this case for each edition of the journal.
 ```{r}
 topics.by.year$issue_date <- paste(topics.by.year$month, " ", topics.by.year$year, sep = "")
 ggplot(data=topics.by.year, aes(x=issue_date, y=gamma)) + geom_bar(stat="identity") + facet_wrap(~ topic, scales = "free") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -143,7 +187,8 @@ ggplot(data=topics.by.year, aes(x=issue_date, y=gamma)) + geom_bar(stat="identit
 
 Using this we can tell that topic 5, which from earlier had the words improve, grow, ties, contracts, and gasoline as the top five words, is most prominent in January 1915. 
 
-(@) Use the rest of this worksheet to experiment with topic modeling. I've added the code to download a much larger dataset - the issues of Mind and Body. This corpus has 413 documents ranging from the 1890s to 1936. You'll want to start with at least 25 topics. 
+(@) Use the rest of this worksheet to experiment with topic modeling. I've added the code to download a much larger dataset - the issues of Mind and Body.
+ This corpus has 413 documents ranging from the 1890s to 1936. You'll want to start with at least 25 topics. 
 ```{r}
 #| eval: false
 download.file("https://github.com/regan008/8510-TextAnalysisData/blob/main/MindAndBody.zip?raw=true", "MB.zip")
@@ -156,32 +201,407 @@ mb.metadata <- read.csv("https://raw.githubusercontent.com/regan008/8510-TextAna
 ```
 
 (@) What happens if you create a custom stopword list? How does this change the model?
+
+Creating a custom stopword list allows you to clean up your data by removing words that don't add value to your analysis while keeping the ones that matter most. This makes
+ your topic modeling results clearer and more relevant by focusing on meaningful terms. In the end, you get better-defined topics, updated key terms for each topic, and more 
+ accurate document assignments. 
+
+
 ```{r}
 
+# Download and extract data
+download.file("https://raw.githubusercontent.com/Jen04Jones/8500Worksheets2/main/MindAndBody.zip", "MindAndBody.zip")
+unzip("MindAndBody.zip", exdir = "extracted_data")
+
+# Preprocess the text
+txt_files <- list.files("extracted_data/txt", full.names = TRUE)
+txt_files <- txt_files[file.size(txt_files) > 100 & file.size(txt_files) < 1e6]  # Include all valid files
+
+text_data <- lapply(txt_files, function(file) {
+  content <- readLines(file, encoding = "UTF-8", warn = FALSE)
+   content <- tolower(content)
+    content <- gsub("[[:punct:]]", "", content)
+     content <- gsub("\\b(will|may|can|must|physical|school)\\b", "", content)
+      content <- gsub("[0-9]+", "", content)
+       content <- trimws(content)
+        content
+})
+
+saveRDS(text_data, "text_data.rds")
+
+# Create Document-Term Matrix (DTM)
+corpus <- Corpus(VectorSource(text_data))
+dtm <- DocumentTermMatrix(corpus)
+  dtm <- removeSparseTerms(dtm, 0.90)  # Increase sparsity threshold to retain more terms
+    dtm <- dtm[rowSums(as.matrix(dtm)) > 0, ]
+
+saveRDS(dtm, "dtm.rds")
+
+# Train the topic model
+k <- 3  # Number of topics
+ lda_model <- LDA(dtm, k = k)
+
+saveRDS(lda_model, "lda_model.rds")
+
+# Extract topic-term matrix (Phi) and document-topic matrix (Theta)
+phi <- posterior(lda_model)$terms
+theta <- posterior(lda_model)$topics
+
+phi <- phi[, colnames(phi) != "" & !is.na(colnames(phi))]
+
+saveRDS(phi, "phi_matrix.rds")
+saveRDS(theta, "theta_matrix.rds")
+
+# Bar Plot for Topic 1
+df <- data.frame(
+  Term = colnames(phi),
+    Probability = as.numeric(phi[1, ])
+)
+
+df <- df[!is.na(df$Probability) & df$Probability > 0, ]
+
+top_terms <- head(df[order(-df$Probability), ], n = 20)
+
+png("bar_plot_topic1.png", width = 800, height = 600)
+ggplot(top_terms, aes(x = reorder(Term, -Probability), y = Probability)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+   coord_flip() +
+    labs(title = "Top Terms in Topic 1", x = "Terms", y = "Probability") +
+     theme_minimal()
+dev.off()
+
+#  Word Cloud for Topic 1
+valid_terms <- grep("^[a-zA-Z]+$", colnames(phi), value = TRUE)
+  valid_freq <- phi[1, colnames(phi) %in% valid_terms]
+   selected_terms <- valid_terms[valid_freq > 0.001]
+    selected_freq <- valid_freq[valid_freq > 0.001]
+
+if (length(selected_terms) > 0) {
+  png("word_cloud_topic1.png", width = 800, height = 600)
+  wordcloud(
+    words = selected_terms,
+    freq = selected_freq,
+    max.words = 50,
+    colors = brewer.pal(8, "Dark2")
+  )
+  dev.off()
+}
 ```
+
+
+
 
 (@) Can you create a topic model for just the documents in the 1920s? How does that change the model? 
 ```{r}
 
+# Download and extract data
+download.file("https://raw.githubusercontent.com/Jen04Jones/8500Worksheets2/main/MindAndBody.zip", "MindAndBody.zip")
+unzip("MindAndBody.zip", exdir = "extracted_data")
+
+# Filter files by year (1920–1929)
+txt_files <- list.files("extracted_data/txt", full.names = TRUE)
+  years <- as.numeric(sub(".*(\\d{4}).*", "\\1", basename(txt_files)))
+    txt_files <- txt_files[years >= 1920 & years <= 1929]  # Keep files from 1920–1929
+
+# Validate filtered files and stopwords
+print(paste("Number of files from 1920-1929:", length(txt_files)))
+  if (length(txt_files) == 0) stop("No files found for the specified date range!")
+
+# Define stop word list (combine tm's built-in list with custom ones)
+stop_words <- unique(c("not", "for", "are", "with", "which", "the", "and", "from", "left", "right", 
+                       "forward", "a", "an", "at", "in", "it", "is", "on", "to", "that", "of", "by", 
+                       "as", "this", "there", "these", "those", "up", "down", "backward", "across", 
+                       "over", "under", "but", "or", "if", "so", "yet", stopwords("en")))
+
+# Preprocess the text and clean metadata (using parallel processing and tokenization)
+text_data <- mclapply(txt_files, function(file) {
+  content <- readLines(file, encoding = "UTF-8", warn = FALSE)
+    content <- tolower(content)
+     content <- gsub("Vol\\.\\s*[0-9]+|Editorial Committee.*|No\\.\\s*[0-9]+", "", content)  # Remove metadata
+      content <- gsub("[[:punct:]]", "", content)
+        tokens <- unlist(strsplit(content, "\\s+"))  # Tokenize into words
+           tokens <- tokens[!(tokens %in% stop_words)]  # Remove stop words
+
+  cleaned_text <- paste(tokens, collapse = " ")  # Recombine tokens into cleaned text
+  cleaned_text <- trimws(cleaned_text)
+  return(cleaned_text)
+}, mc.cores = detectCores() - 1)
+
+# Debug: Inspect preprocessed data
+print("Sample of preprocessed data:")
+  print(head(text_data[[1]], 10))  # Display first 10 lines of the first file
+
+# Create Document-Term Matrix (DTM)
+corpus <- Corpus(VectorSource(text_data))
+  dtm <- DocumentTermMatrix(corpus)
+
+# Debug: Validate DTM before filtering
+print(paste("DTM dimensions before filtering:", paste(dim(dtm), collapse = " x ")))
+
+# Adjust sparsity threshold to retain more terms
+dtm <- removeSparseTerms(dtm, 0.85)
+
+# Debug: Validate DTM after filtering
+print(paste("DTM dimensions after filtering:", paste(dim(dtm), collapse = " x ")))
+  if (dim(dtm)[2] < 10) stop("Too few terms remain after filtering. Adjust sparsity or preprocessing.")
+
+k <- 5  # Number of topics
+lda_model <- LDA(dtm, k = k)
+
+# Debug: Validate topic model  AL April 14, 2025 Coplot for debugging
+phi <- posterior(lda_model)$terms  # Topic-term matrix
+theta <- posterior(lda_model)$topics  # Document-topic matrix
+print(dim(phi))  # Display dimensions of phi
+  print(head(phi))  # View the first few terms for each topic
+    print(dim(theta))  # Display dimensions of theta
+      print(head(theta))  # View the first few rows of theta
+
+# Extract Key Words for Each Topic AI April 14, 2925 Copilot Helped with keywords
+top_words <- lapply(1:k, function(topic) {
+  terms <- colnames(phi)  # Get term names
+   probabilities <- phi[topic, ]  # Probabilities for each term in the topic
+    valid_indices <- probabilities > 0  # Ensure terms have non-zero probabilities
+     if (sum(valid_indices) < 10) stop(paste("Too few terms are valid for Topic", topic))
+     top_terms <- terms[order(-probabilities)][1:10]  # Top 10 terms
+     top_probabilities <- probabilities[order(-probabilities)][1:10]
+      data.frame(
+
+    Topic = paste("Topic", topic),
+    Term = top_terms,
+    Probability = top_probabilities
+  )
+})
+
+# Combine results into one table
+top_words_df <- do.call(rbind, top_words)
+
+# Debug: Inspect top words for each topic AI April 14, 2025 helped with Debug
+print("Top words for each topic:")
+print(top_words_df)
+
+ # Visualize Key Words Using a Bar Plot
+png("topic_key_words_1920s.png", width = 1200, height = 800)
+ggplot(top_words_df, aes(x = reorder(Term, -Probability), y = Probability, fill = Topic)) +
+  geom_bar(stat = "identity") +
+    facet_wrap(~ Topic, scales = "free") +
+     coord_flip() +
+      labs(title = "Top Words for Each Topic (1920–1929)", x = "Key Words", y = "Probability") +
+        theme_minimal()
+dev.off() 
+
+# Debug: Check if PNG file was created AI April 14, 2025 Copilot helped make sure png printed
+print("Checking if the PNG file has been saved...")
+png_path <- file.path(getwd(), "topic_key_words_1920s.png")
+if (file.exists(png_path)) {
+  print(paste("PNG file successfully created at:", png_path))
+} else {
+  stop("Failed to create PNG file!")
+}
+
 
 ```
 
-(@) Now, lets return to the Buffalo Bill data from last week. You should be able to use topic modeling to address two of the research questions provided:
+(@) Choose one of the datasets from this repository or use one of your own: https://github.com/regan008/8510-TextAnalysisData. Note that there are both zip files with .txt files as well as separate metadata files for each publication in this repo. 
 
-* Can we detect some change over time in promotion language and reception language (marketing and reviewing)? Were there types of characters, scenarios, action promised in promotional material and/or noted in reviews earlier vs later?
-* What can be gleaned from the items tagged as extraneous as far as topics? These are news items that are somehow related to BBWW. Crime, finances, celebrity, etc.
+Fit a topic model that explores and asks questions of the texts. At the end write a summary that analyzes the results you found. Be sure to rely on your historical knowledge. What can we learn from applying the strategies you've learned in this worksheet to analyze these documents? How might topic models be useful to explore a large corpus of texts?
 
-To analyze this you should first generate a topic model for the buffalo bill data. Play with the number of topics until you find a number that feels about right for the dataset. I am guessing it'll be in the 8-15 range but you'll need to play with it to see what number gives you the best fit. 
+```r
+# This is the same code as above but for the older 1890s 
 
-To address the first research question, you'll need to plot topics over time. I would create three models, one for all of the data, one for promotion, and one for reception. What do we learn by doing this?
+# Download and extract data
+download.file("https://raw.githubusercontent.com/Jen04Jones/8500Worksheets2/main/MindAndBody.zip", "MindAndBody.zip")
+unzip("MindAndBody.zip", exdir = "extracted_data")
 
-For the second, a general topic model of the extraneous articles will be needed. 
+# Filter files by year (1890–1899) for my historical analyze
+txt_files <- list.files("extracted_data/txt", full.names = TRUE)
+years <- as.numeric(sub(".*(\\d{4}).*", "\\1", basename(txt_files)))
+txt_files <- txt_files[years >= 1890 & years <= 1899]  # Keep files from 1890–1899
 
-Add code blocks below as necessary.
+# Debug: Validate filtered files AI April 14, 2025 Copilot helped with debugging
+print(paste("Number of files from 1890-1899:", length(txt_files)))
+if (length(txt_files) == 0) stop("No files found for the specified date range!")
 
-(@) Finally, when you are all done. Write up your findings. What research question did you focus on and what did you learn? 
+# Stop word list (combine tm's built-in list with custom ones)
+stop_words <- unique(c("not", "for", "are", "with", "which", "the", "and", "from", "left", "right", 
+                       "forward", "a", "an", "at", "in", "it", "is", "on", "to", "that", "of", "by", 
+                       "as", "this", "there", "these", "those", "up", "down", "backward", "across", 
+                       "over", "under", "but", "or", "if", "so", "yet", stopwords("en")))
+
+# Preprocess the text and clean metadata (using parallel processing and tokenization)
+text_data <- mclapply(txt_files, function(file) {
+  content <- readLines(file, encoding = "UTF-8", warn = FALSE)
+    content <- tolower(content)
+     content <- gsub("Vol\\.\\s*[0-9]+|Editorial Committee.*|No\\.\\s*[0-9]+", "", content)  # Remove metadata
+      content <- gsub("[[:punct:]]", "", content)
+       tokens <- unlist(strsplit(content, "\\s+"))  # Tokenize into words
+        tokens <- tokens[!(tokens %in% stop_words)]  # Remove stop words
+          cleaned_text <- paste(tokens, collapse = " ")  # Recombine tokens into cleaned text
+           cleaned_text <- trimws(cleaned_text)
+   return(cleaned_text)
+}, mc.cores = detectCores() - 1)
+
+# Debug: Inspect preprocessed data  AI April 14, 2025 Copilot helped with debugging
+print("Sample of preprocessed data:")
+print(head(text_data[[1]], 10))  # Display first 10 lines of the first file
+
+# Create Document-Term Matrix (DTM)
+corpus <- Corpus(VectorSource(text_data))
+dtm <- DocumentTermMatrix(corpus)
+
+# Debug: Validate DTM before filtering AI April 14, 2025 helped with debugging
+print(paste("DTM dimensions before filtering:", paste(dim(dtm), collapse = " x ")))
+
+# Adjust sparsity threshold to retain more terms
+dtm <- removeSparseTerms(dtm, 0.85)
+
+# Debug: Validate DTM after filtering AI April 14 2025 Copilot helped with debugging
+print(paste("DTM dimensions after filtering:", paste(dim(dtm), collapse = " x ")))
+if (dim(dtm)[2] < 10) stop("Too few terms remain after filtering. Adjust sparsity or preprocessing.")
+
+
+k <- 5  # Number of topics  I only needed top 5 for my analyze
+lda_model <- LDA(dtm, k = k)
+
+# Debug: Validate topic model AI April 14, 2025 helped with debugging
+phi <- posterior(lda_model)$terms  # Topic-term matrix
+theta <- posterior(lda_model)$topics  # Document-topic matrix
+ print(dim(phi))  # Display dimensions of phi
+   print(head(phi))  # View the first few terms for each topic
+     print(dim(theta))  # Display dimensions of theta
+      print(head(theta))  # View the first few rows of theta
+
+# Extract Key Words for Each Topic
+top_words <- lapply(1:k, function(topic) {
+  terms <- colnames(phi)  # Get term names
+    probabilities <- phi[topic, ]  # Probabilities for each term in the topic
+      valid_indices <- probabilities > 0  # Ensure terms have non-zero probabilities
+        if (sum(valid_indices) < 10) stop(paste("Too few terms are valid for Topic", topic))
+         top_terms <- terms[order(-probabilities)][1:10]  # Top 10 terms
+          top_probabilities <- probabilities[order(-probabilities)][1:10]
+
+   data.frame(
+    Topic = paste("Topic", topic),
+    Term = top_terms,
+    Probability = top_probabilities
+  )
+})
+
+# Combine results into one table
+top_words_df <- do.call(rbind, top_words)
+
+# Debug: Inspect top words for each topic AI Apirl 14, 2025 helped debug
+print("Top words for each topic:")
+print(top_words_df)
+
+# Step 7: Visualize Key Words Using a Bar Plot, used bar plot easiest to work with
+png("topic_key_words_1890s.png", width = 1200, height = 800)
+ggplot(top_words_df, aes(x = reorder(Term, -Probability), y = Probability, fill = Topic)) +
+  geom_bar(stat = "identity") +
+   facet_wrap(~ Topic, scales = "free") +
+    coord_flip() +
+     labs(title = "Top Words for Each Topic (1890–1899)", x = "Key Words", y = "Probability") +
+     theme_minimal()
+      dev.off()  # Close graphics device
+
+# Debug: Check if PNG file was created AI April 14, 2025 Copilot helped make sure graph printed. 
+print("Checking if the PNG file has been saved...")
+png_path <- file.path(getwd(), "topic_key_words_1890s.png")
+if (file.exists(png_path)) {
+  print(paste("PNG file successfully created at:", png_path))
+} else {
+  stop("Failed to create PNG file!")
+}
+```
 
 
 
-**This was the final worksheet for this class. You did it - you learned to code in R! Congrats!**
+What my topic modeling told me about what was going on in the magazine Mind and Body about Health.
+
+I also have a graph created of the top 5 topics with these keywords
+to examine for my historical anaylze. 
+
+              Topic       Term Probability
+one         Topic 1        one 0.010964297
+position    Topic 1   position 0.010711777
+arms        Topic 1       arms 0.007651293
+arm         Topic 1        arm 0.006929826
+body        Topic 1       body 0.006577182
+exercises   Topic 1  exercises 0.006561063
+first       Topic 1      first 0.006076997
+circle      Topic 1     circle 0.005991394
+ball        Topic 1       ball 0.005975138
+front       Topic 1      front 0.005921581
+exercise    Topic 2   exercise 0.010375888
+will        Topic 2       will 0.009268577
+one1        Topic 2        one 0.009029286
+physical    Topic 2   physical 0.007662826
+work        Topic 2       work 0.005444521
+ball1       Topic 2       ball 0.004530342
+can         Topic 2        can 0.004416214
+digitized   Topic 2  digitized 0.004355614
+time        Topic 2       time 0.004353364
+position1   Topic 2   position 0.003820756
+will1       Topic 3       will 0.010754378
+physical1   Topic 3   physical 0.010610493
+training    Topic 3   training 0.009225311
+military    Topic 3   military 0.007510181
+one2        Topic 3        one 0.007499357
+gymnastics  Topic 3 gymnastics 0.007454554
+schools     Topic 3    schools 0.007276270
+may         Topic 3        may 0.006565315
+school      Topic 3     school 0.006523262
+body1       Topic 3       body 0.005692893
+tierce      Topic 4     tierce 0.021960915
+quarte      Topic 4     quarte 0.021351567
+lunge       Topic 4      lunge 0.015488152
+parry       Topic 4      parry 0.014527079
+guard       Topic 4      guard 0.013784966
+lower       Topic 4      lower 0.011817184
+counter     Topic 4    counter 0.009748104
+engage      Topic 4     engage 0.009485686
+resume      Topic 4     resume 0.009484243
+return      Topic 4     return 0.007821516
+exercises1  Topic 5  exercises 0.010774538
+school1     Topic 5     school 0.009638586
+physical2   Topic 5   physical 0.009226719
+will2       Topic 5       will 0.008276959
+work1       Topic 5       work 0.007035582
+one3        Topic 5        one 0.006809498
+gymnastics1 Topic 5 gymnastics 0.006452030
+exercise1   Topic 5   exercise 0.005961280
+may1        Topic 5        may 0.005857203
+gymnastic   Topic 5  gymnastic 0.005583658
+
+
+The above are my top 5 topics : it does print out a topic model but d idn't know how to paste it here. 
+
+The 1890's were an era of change, and growth for the United States. 
+
+You've pulled together a fascinating narrative here, Jennifer, weaving your topic modeling insights with historical milestones from the 1890s.
+ The data really highlights the era's dynamic shifts in health, sports, and exercise culture, alongside broader societal and technological changes.
+
+Your topic modeling results suggest strong connections between physical activities like gymnastics and exercise, which were likely influenced by
+ key historical events—like the 1896 Olympic Games—and emerging social norms regarding fitness. The repeated presence of "gymnastics" and "exercise" 
+ across topics underscores their growing significance during this transformative period. It's striking how sports like basketball, professional football,
+  and the Boston Marathon also gained traction, shaping the health and wellness landscape.
+
+Your point about immigration through Ellis Island and the World's Fair in Chicago provides valuable context for understanding how diverse perspectives 
+on health and wellness converged in the United States. Similarly, the impact of the 1893 depression offers a nuanced view, juxtaposing physical fitness 
+advancements with economic challenges.
+
+The mention of military training in your topic model aligns well with historical developments, including the Spanish-American War and its aftermath.
+ This speaks to how physical fitness and military readiness often intersected during this time.
+
+The dataset you've explored seems to be a rich source for examining how health, fitness, and sports evolved during this decade. Do you plan to dive 
+deeper into the connections between exercise and societal shifts, or focus on specific sports like gymnastics? I'd be happy to brainstorm ideas or help
+ refine your analysis further!
+
+
+
+
+
+
+
+
+
 
