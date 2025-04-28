@@ -358,7 +358,7 @@ library(maps)
 # Boston Women Voters dataset
 data("BostonWomenVoters")  # Ensure the dataset is properly loaded
 
-#Combine address with full address column
+#Combine address with full address column AI April 22, 2025 Copilot debug, and ifelse use.
 boston_data <- BostonWomenVoters %>%
   mutate(
     Husband.Town.of.Birth = ifelse(Husband.Town.of.Birth == "", "Unknown", Husband.Town.of.Birth),
@@ -741,8 +741,11 @@ saveWidget(boston_map, file = "boston_women_voters_map.html")
 
 
 >I picked BostonWomenVoters because I am curious about this dataset. There is a lot of history involving women's right, I want
-to look at. I picked 20 subsetting it because of my Visual Studio problems with Memory. But I found it interesting it was women
-from other states.  
+to study. I picked 20 subsetting it because of my Visual Studio problems with Memory. But I found it interesting it was women
+from other states. I'd like to research how women from different states came together to allow Women to Vote.
+There is so much I take for granted as a woman sometimes, Voting is one of those I have take for granted, and 
+it is so important that women can vote. I'd like to study some of the women behind the dataset. And ask
+questions of their lives, especially occupations, education, and class.  
 
 ggplot and leaflet:
 
@@ -940,31 +943,51 @@ saveWidget(leaflet_map, "uk_us_parks_map_no_lines.html", selfcontained = TRUE)
 leaflet_map
 ```
 
- Ideas for a Book using this historical Data: 
+Ideas for a Book using this historical Data: 
 
 In the three visualizations above, I found that a lot of the parks tended to be made after World War II in
-Europe around 1950s. This makes sense because the United Kingdom and Continential Europe were destroyed by 
-World War II. 
-The parks were part of the rebuilding process. 
+Europe around 1950s. This makes sense because the United Kingdom and Continental Europe were destroyed by 
+World War II. I think arguing about the connection between World War II and creating national parks 
+would be a good idea to study. Even if memorial parks were only looked at. I would want to
+ask who instigated the creation of the national park, especially those created in the 1950s. Who built them?
+It would also be great to research the locations and their ties to World War II. Also, look at how American 
+Parks were created in the 1930s and if they were models or if they motivated the European Parks to be created.
+This would be a specific study into Parks created in the 1950s.  
 
-The United States had older maps, but most were after the the Great Depression. They were built by the
-The Civilian Conservation Corps, which was millions of young men hired to build these parks after. 
-Great Depression, which were projects of the New Deal, they were built to give people jobs, and to conserve
-the beauty. 
 
-One specific state in the United States, Alaska has all but one national park built in 1980.
-This falls after The Alaska National Interest Lands Conservation Act (ANILCA) was signed by President Jimmy
- Carter on December 2, 1980. This was to respect native traditions of culture. 
+The United States had older maps, but most were after the the Great Depression. The earliest was 1916.
+The parks from the 1930s were built by the In the Civilian Conservation Corps, millions of young men were 
+hired to build these parks afterward. Great Depression, which was a project of the New Deal, they were built
+ to give people jobs and to conserve beauty. Studying the people involved and all they accomplished
+across the United States would be fascinating. Research into how important the CCC was to millions of young white males
+would be interesting. I could even see how the racial questions were handled. It would
+be great to research alongside the New Deal and look at the motivations and the purpose of the
+CCC.  
 
- The above paragraph could go many directions with a book, such questions could be explored in the larger
- context of the big events, like World War II and The Great Depression. So it could be about what brought
- about the new national parks.  
+One specific state in the United States, Alaska, built all but one national park in 1980.
+This falls after President Jimmy signed the Alaska National Interest Lands Conservation Act (ANILCA)
+ Carter on December 2, 1980. This was to respect native traditions and culture. The biggest question
+ that first comes to mind is why? Where were the motivations behind this, and what events led to
+ the 1980 creation of these national parks? Also, how did the national parks support native peoples
+ for food and traditions? It could also be looked at through the lens of Jimmy Carter. Taking a
+ closer look at Jimmy Carter's presidency would also be a topic where questions could be asked
+ about what other types of humanitarian and natural preservation policies he supported. This
+ would be a different approach that would be new and interesting. Even taking this information
+ and looking at other presidents who supported our National Parks would be ideal to show what
+ the national parks have stood for in the past. This question could be good to compare and 
+ contrast with the current Trump administration and its lack of care for Americans' National
+ Parks. 
  
- The fact that Alaska parks were all built in 1980, could tie into the
- story of the natives, and their traditions, or even looking at what was going on in the United States
- when Carter created this act. ANILCA made 104 million acres of Alaska into national parks. And half of
- thatland was set aside for widerness. 
 
- When I compared the United Kingdom to contenietal Europe most of the United Kingdoms parks were 5000 km in
-sized opposed to Europes that were half the size. The largest national park was in Norway though
-12,500 sq km.  This dateset has so much potential to raise so many historical questions. 
+ When I compared the United Kingdom to continental Europe, most of the United Kingdom's parks were 5000 km in
+size as opposed to continental Europe, which was half the size. The largest national park was in Norway, though at
+12,500 sq km. Considering the UK's small size, research into what motivated the United Kingdom to build bigger
+ national parks would be interesting. Why were these parks built, by who, and for what
+reasons? Were these parks built as memorials of natural preservation? There are so many questions to look
+at. A complete comparison to all of Centennial Europe might be too broad, so I would look closely
+at France and Germany to see if these Parks are related to World War II recovery and how
+the parks are used as a whole. I didn't make a map specifically looking at France, Germany, and the
+England, but it would also be a great topic to research. The maps I created support the broader
+context of Continental Europe. This could also be a starting point for looking at the broader 
+connections of World War II.  
+
